@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>京东抢购助手</title>
+</head>
+<body>
+    <h2>京东抢购助手 Web 面板</h2>
+    {% if message %}
+    <p style="color:green">{{ message }}</p>
+    {% endif %}
+    <form action="/start" method="post">
+        商品ID: <input type="text" name="sku_id" required><br>
+        抢购时间: <input type="text" name="schedule_time" required placeholder="格式: HH:MM"><br>
+        <button type="submit">开始抢购</button>
+    </form>
+
+    <h3>实时日志</h3>
+    <div id="logContainer"></div>
+    
+    <script>
+        var ws = new WebSocket("ws://localhost:8000/ws");
+        ws.onmessage = function(event) {
+            var logContainer = document.getElementById("logContainer");
+            logContainer.innerHTML += event.data + "<br>";
+        }
+
+        function sendLogMessage() {
+            ws.send("开始抢购...");
+        }
+    </script>
+</body>
+</html>
